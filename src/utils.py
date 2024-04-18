@@ -53,8 +53,8 @@ class JobVacancy:
         if not salary:
             self.salary = "Зарплата не указана"
 
-    def __str__(self):
-        return (f"{self.title} - {self.link}\n "
+    def __repr__(self):
+        return (f"{self.title} - {self.link}\n"
                 f"{self.salary} - {self.currency}\n"
                 f"{self.description}")
 
@@ -64,17 +64,20 @@ class JobVacancy:
 
     @classmethod
     def json_serialize(cls, dict_job):
-        pprint(dict_job)
-        print(type(dict_job))
-        pprint(dict_job.get("salary", {}))
-        salary = dict_job.get("salary", {})
-        currency = dict_job.get("salary", {}).get("currency")
+        salary = dict_job.get("salary")
+        if salary:
+            amount = salary.get("from")
+            currency = salary.get("currency")
+        else:
+            amount = None
+            currency = None
+
         description = dict_job.get("snippet", {}).get("responsibility")
 
         return cls(
             title=dict_job.get("name"),
             link=dict_job.get("url"),
-            salary=salary,
+            salary=amount,
             currency=currency,
             description=description
 
