@@ -22,6 +22,7 @@ class HHJobAPI(JobAPI):
 
     def __init__(self):
         self.params = {'text': '', 'page': 0, 'per_page': 100}
+        self.encoding = 'UTF-8'
 
     def get_vacancies(self, **kwargs):
         params = self.params.copy()
@@ -29,9 +30,9 @@ class HHJobAPI(JobAPI):
         endpoint = "vacancies"
         url = self.baseurl + endpoint
         response = requests.get(url, params=params)
+        response.encoding = self.encoding
         if response.status_code == 200:
             data = response.json()
-            # pprint(data)
             return data.get("items")
         else:
             return []
@@ -64,7 +65,7 @@ class JobVacancy:
 
     @classmethod
     def cast_object_list_from_file(cls, job_list):
-        return list(map(cls.json_serialize, job_list))
+        return list(map(cls.json_serialize_from_file, job_list))
 
     @classmethod
     def json_serialize_from_file(cls, dict_job):
@@ -80,7 +81,7 @@ class JobVacancy:
     def __repr__(self):
         return (f"{self.title} - {self.link}\n"
                 f"{self.salary} - {self.currency}\n"
-                f"{self.description}")
+                f"{self.description[:50]}...\n" if self.description is not None else "None")
 
     @classmethod
     def cast_to_object_list(cls, job_list):
@@ -138,7 +139,8 @@ class JSONJobFile(JobFile):
         self.filename = filename
         if os.path.exists(filename):
             with open(filename, "r", encoding="UTF-8") as file:
-                self.data = JobVacancy.cast_to_object_list(json.load(file))
+                data = json.load(file)
+                self.data = JobVacancy.cast_object_list_from_file(data)
         self.data = []
 
     def add_vacancy(self, vacancy):
@@ -149,7 +151,7 @@ class JSONJobFile(JobFile):
 
     def get_vacancies(self, **criteria):
         object_list = []
-        for k, v in criteria:
+        for k, v in criteria.items():
             filtered_object = list(filter(lambda x: getattr(x, k) == v, self.data))
             object_list.extend(filtered_object)
         return object_list

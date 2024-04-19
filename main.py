@@ -12,8 +12,9 @@ hh_vacancies = hh_api.get_vacancies(text="Python")
 
 # Преобразование набора данных из JSON в список объектов
 vacancies_list = JobVacancy.cast_to_object_list(hh_vacancies)
-file = JSONJobFile("Test.json")
+file = JSONJobFile("test.json")
 file.add_vacancy(vacancies_list)
+print(file.get_all())
 file.commit()
 # Пример работы контструктора класса с одной вакансией
 # vacancy = Vacancy("Python Developer", "", "100 000-150 000 руб.", "Требования: опыт работы от 3 лет...")
