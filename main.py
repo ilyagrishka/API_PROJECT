@@ -50,9 +50,11 @@ def get_vacancies_by_salary(vacancies, salary_range):
     filtered_vacancies = []
     for vacancy in vacancies:
         try:
-            vacancy_salary = vacancy['salary']['from']
-            if min_salary < vacancy_salary < max_salary:
-                filtered_vacancies.append(vacancy)
+            if vacancy['salary']:
+
+                vacancy_salary = vacancy['salary']['from']
+                if int(min_salary) < vacancy_salary < int(max_salary):
+                    filtered_vacancies.append(vacancy)
         except KeyError:
             continue
     return filtered_vacancies
