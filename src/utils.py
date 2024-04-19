@@ -2,6 +2,7 @@ import requests
 import json
 from abc import ABC, abstractmethod
 from pprint import pprint
+import os
 
 
 # абстрактный класс для работы с API сервиса с вакансиями
@@ -53,6 +54,14 @@ class JobVacancy:
         if not salary:
             self.salary = "Зарплата не указана"
 
+    @classmethod
+    def cast_object_list_from_file(cls, job_list):
+        return list(map(cls.json_serialize, job_list))
+
+    @classmethod
+    def json_serialize_from_file(cls):
+        pass
+
     def __repr__(self):
         return (f"{self.title} - {self.link}\n"
                 f"{self.salary} - {self.currency}\n"
@@ -99,18 +108,39 @@ class JobFile(ABC):
     def delete_vacancy(self, vacancy):
         raise NotImplementedError
 
+    @abstractmethod
+    def get_all(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def commit(self):
+        raise NotImplementedError
+
 
 # класс для сохранения информации о вакансиях в JSON-файл
 class JSONJobFile(JobFile):
     def __init__(self, filename):
         self.filename = filename
-        self.data = []
+        if os.path.exists(filename):
+            with open(filename, "r", encoding="UTF-8") as file:
+                self.data = JobVacancy.cast_to_object_list(json.load(file))
+            self.data = []
 
     def add_vacancy(self, vacancy):
-        pass
+        if isinstance(vacancy, list):
+            self.data.extend(vacancy)
+        elif isinstance(vacancy, JobVacancy):
+            self.data.append(vacancy)
 
     def get_vacancies(self, criteria):
         pass
 
     def delete_vacancy(self, vacancy):
         pass
+
+    def get_all(self):
+        pass
+
+    def commit(self):
+        with open(self.filename, "w", encoding="UTF-8") as file:
+            json.dump(self.data, file)

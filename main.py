@@ -1,4 +1,4 @@
-from src.utils import HHJobAPI,JobVacancy
+from src.utils import HHJobAPI, JobVacancy
 from pprint import pprint
 
 # Создание экземпляра класса для работы с API сайтов с вакансиями
@@ -6,7 +6,7 @@ from pprint import pprint
 hh_api = HHJobAPI()
 
 # Получение вакансий с hh.ru в формате JSON
-hh_vacancies = hh_api.get_vacancies()
+hh_vacancies = hh_api.get_vacancies(text="Python")
 
 # Преобразование набора данных из JSON в список объектов
 vacancies_list = JobVacancy.cast_to_object_list(hh_vacancies)
