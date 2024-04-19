@@ -55,6 +55,14 @@ class JobVacancy:
             self.salary = "Зарплата не указана"
 
     @classmethod
+    def serialize_to_dict(cls, job_list):
+        return list(map(cls.serialize_obj, job_list))
+
+    @classmethod
+    def serialize_obj(cls, obj):
+        return obj.__dict__
+
+    @classmethod
     def cast_object_list_from_file(cls, job_list):
         return list(map(cls.json_serialize, job_list))
 
@@ -131,7 +139,7 @@ class JSONJobFile(JobFile):
         if os.path.exists(filename):
             with open(filename, "r", encoding="UTF-8") as file:
                 self.data = JobVacancy.cast_to_object_list(json.load(file))
-            self.data = []
+        self.data = []
 
     def add_vacancy(self, vacancy):
         if isinstance(vacancy, list):
@@ -139,15 +147,19 @@ class JSONJobFile(JobFile):
         elif isinstance(vacancy, JobVacancy):
             self.data.append(vacancy)
 
-    def get_vacancies(self, criteria):
-        pass
+    def get_vacancies(self, **criteria):
+        object_list = []
+        for k, v in criteria:
+            filtered_object = list(filter(lambda x: getattr(x, k) == v, self.data))
+            object_list.extend(filtered_object)
+        return object_list
 
     def delete_vacancy(self, vacancy):
-        pass
+        self.data.remove(vacancy)
 
     def get_all(self):
-        pass
+        return self.data.copy()
 
     def commit(self):
         with open(self.filename, "w", encoding="UTF-8") as file:
-            json.dump(self.data, file)
+            json.dump(JobVacancy.serialize_to_dict(self.data), file)

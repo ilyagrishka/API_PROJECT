@@ -1,5 +1,7 @@
-from src.utils import HHJobAPI, JobVacancy
+from src.utils import HHJobAPI, JobVacancy,JSONJobFile
 from pprint import pprint
+
+
 
 # Создание экземпляра класса для работы с API сайтов с вакансиями
 
@@ -10,7 +12,9 @@ hh_vacancies = hh_api.get_vacancies(text="Python")
 
 # Преобразование набора данных из JSON в список объектов
 vacancies_list = JobVacancy.cast_to_object_list(hh_vacancies)
-pprint(vacancies_list)
+file = JSONJobFile("Test.json")
+file.add_vacancy(vacancies_list)
+file.commit()
 # Пример работы контструктора класса с одной вакансией
 # vacancy = Vacancy("Python Developer", "", "100 000-150 000 руб.", "Требования: опыт работы от 3 лет...")
 #
