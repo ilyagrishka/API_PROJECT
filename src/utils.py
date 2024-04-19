@@ -59,8 +59,15 @@ class JobVacancy:
         return list(map(cls.json_serialize, job_list))
 
     @classmethod
-    def json_serialize_from_file(cls):
-        pass
+    def json_serialize_from_file(cls, dict_job):
+        return cls(
+            title=dict_job.get("name"),
+            link=dict_job.get("url"),
+            salary=dict_job.get('salary'),
+            currency=dict_job.get('currency'),
+            description=dict_job.get('description')
+
+        )
 
     def __repr__(self):
         return (f"{self.title} - {self.link}\n"
