@@ -55,20 +55,25 @@ class JobVacancy:
         if not salary:
             self.salary = "Зарплата не указана"
 
-    @classmethod
-    def serialize_to_dict(cls, job_list):
-        return list(map(cls.serialize_obj, job_list))
+    def __repr__(self):
+        return (f"{self.title} - {self.link}\n"
+                f"{self.salary} - {self.currency}\n"
+                f"{self.description[:50]}...\n" if self.description is not None else "None")
 
     @classmethod
-    def serialize_obj(cls, obj):
+    def cast_object_list_to_dict(cls, job_list):
+        return list(map(cls.serialize_obj_to_doct, job_list))
+
+    @classmethod
+    def serialize_obj_to_doct(cls, obj):
         return obj.__dict__
 
     @classmethod
     def cast_object_list_from_file(cls, job_list):
-        return list(map(cls.json_serialize_from_file, job_list))
+        return list(map(cls.serialize_dict_to_obj, job_list))
 
     @classmethod
-    def json_serialize_from_file(cls, dict_job):
+    def serialize_dict_to_obj(cls, dict_job):
         return cls(
             title=dict_job.get("name"),
             link=dict_job.get("url"),
@@ -77,11 +82,6 @@ class JobVacancy:
             description=dict_job.get('description')
 
         )
-
-    def __repr__(self):
-        return (f"{self.title} - {self.link}\n"
-                f"{self.salary} - {self.currency}\n"
-                f"{self.description[:50]}...\n" if self.description is not None else "None")
 
     @classmethod
     def cast_to_object_list(cls, job_list):
@@ -164,4 +164,4 @@ class JSONJobFile(JobFile):
 
     def commit(self):
         with open(self.filename, "w", encoding="UTF-8") as file:
-            json.dump(JobVacancy.serialize_to_dict(self.data), file)
+            json.dump(JobVacancy.cast_object_list_to_dict(self.data), file)
