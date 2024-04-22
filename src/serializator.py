@@ -14,18 +14,18 @@ class JobVacancy:
 
     def __repr__(self):
         '''приводим полученну информацию в нужный вид'''
-        return (f"{self.title} {self.link}\n"
+        return (f"{self.title}\n"
                 f"{self.salary} - {self.currency}\n"
-                f"{self.description[:50]}...\n" if self.description is not None else "None"
-                                                                                     f"{self.link}\n"
-                                                                                     f"=" * 30, "\n")
+                f"{self.description}\n"
+                # f"{self.description[:50]}...\n" if self.description is not None else "None"
+                f"{self.link}\n")
 
     @classmethod
     def cast_object_list_to_dict(cls, job_list):
-        return list(map(cls.serialize_obj_to_doct, job_list))
+        return list(map(cls.serialize_obj_to_dict, job_list))
 
     @classmethod
-    def serialize_obj_to_doct(cls, obj):
+    def serialize_obj_to_dict(cls, obj):
         return obj.__dict__
 
     @classmethod

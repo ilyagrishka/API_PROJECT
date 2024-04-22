@@ -11,21 +11,17 @@ def filter_vacancies(vacancies, filter_words):
 
 
 def get_vacancies_by_salary(vacancies, salary_range):
-    count = 0
     min_salary, max_salary = salary_range.split('-')
     filtered_vacancies = []
     for vacancy in vacancies:
         try:
             if vacancy['salary'] is not None:
-
                 vacancy_salary = vacancy['salary']['from']
                 if vacancy_salary is not None:
-                    if int(min_salary) < vacancy_salary < int(max_salary):
+                    if int(min_salary) <= vacancy_salary <= int(max_salary):
                         filtered_vacancies.append(vacancy)
         except KeyError:
-            count += 1
-
-    print(count)
+            continue
     return filtered_vacancies
 
 
