@@ -2,8 +2,6 @@ def check_by_key_words(vacancy, filter_words):
     for word in filter_words:
         if word in vacancy.get('name') or vacancy.get('snippet').get('requirement'):
             return True
-        else:
-            False
 
 
 def filter_vacancies(vacancies, filter_words):

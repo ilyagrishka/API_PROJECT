@@ -5,7 +5,7 @@ from src.utils import get_current_data
 from src.serializator import JobVacancy
 
 
-def user_interaction():
+def user_interaction() -> None:
     hh_api = HHJobAPI()
     platforms = ["HeadHunter"]
     search_query = input("Введите поисковый запрос: ")

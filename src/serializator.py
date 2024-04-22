@@ -21,19 +21,19 @@ class JobVacancy:
                 f"{self.link}\n")
 
     @classmethod
-    def cast_object_list_to_dict(cls, job_list):
+    def cast_object_list_to_dict(cls, job_list: list) -> list:
         return list(map(cls.serialize_obj_to_dict, job_list))
 
     @classmethod
-    def serialize_obj_to_dict(cls, obj):
+    def serialize_obj_to_dict(cls, obj) -> dict:
         return obj.__dict__
 
     @classmethod
-    def cast_object_list_from_file(cls, job_list):
+    def cast_object_list_from_file(cls, job_list: list) -> list:
         return list(map(cls.serialize_dict_to_obj, job_list))
 
     @classmethod
-    def serialize_dict_to_obj(cls, dict_job):
+    def serialize_dict_to_obj(cls, dict_job: dict) -> object:
         return cls(
             title=dict_job.get("name"),
             link=dict_job.get("url"),
@@ -44,11 +44,11 @@ class JobVacancy:
         )
 
     @classmethod
-    def cast_to_object_list(cls, job_list):
+    def cast_to_object_list(cls, job_list: list) -> list:
         return list(map(cls.json_serialize, job_list))
 
     @classmethod
-    def json_serialize(cls, dict_job):
+    def json_serialize(cls, dict_job: dict) -> object:
         salary = dict_job.get("salary")
         if salary:
             amount = salary.get("from")
@@ -69,6 +69,6 @@ class JobVacancy:
         )
 
     @classmethod
-    def show_vacancies(cls, vacancies_list):
+    def show_vacancies(cls, vacancies_list: list[object]) -> None:
         for vacancy in vacancies_list:
             print(vacancy)
