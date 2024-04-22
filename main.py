@@ -13,11 +13,6 @@ def user_interaction():
     filter_words = input("Введите ключевые слова для фильтрации вакансий: ").split()
     salary_range = input("Введите диапазон зарплат: ")  # Пример: 100000 - 150000
 
-    search_query = 'python'
-    top_n = 10
-    filter_words = 'python'.split()
-    salary_range = '100000 - 150000'
-
     vacancies = hh_api.get_vacancies(text=search_query)
     current_vacancies = get_current_data(vacancies, filter_words, salary_range, top_n)
     serialize_data = JobVacancy.cast_to_object_list(current_vacancies)
